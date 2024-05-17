@@ -6,9 +6,9 @@ app = Flask(__name__)
 server_token="notsecured"   # todo: change it to get from env
 sqs_client = boto3.client("sqs",
     region_name="us-east-1",#os.environ.get('AWS_DEFAULT_REGION'),
-    endpoint_url="http://localhost:4566",#os.environ.get('AWS_ENDPOINT'),
-    aws_access_key_id="my_access_key", #os.environ.get('AWS_ACCESS_KEY_ID'),
-    aws_secret_access_key="my_secret_key")#os.environ.get('AWS_SECRET_ACCESS_KEY'))
+    endpoint_url="http://localhost.localstack.cloud:4566",#os.environ.get('AWS_ENDPOINT'),
+    aws_access_key_id="test", #os.environ.get('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key="test")#os.environ.get('AWS_SECRET_ACCESS_KEY'))
 queue_url = sqs_client.get_queue_url(
         QueueName="checkpoint-SQS",
     )["QueueUrl"]
@@ -18,7 +18,7 @@ def add_message():
     content_valid=validate_content(content)
     if(validate_content(content)!=""):
         return content_valid,400
-    send_message_to_sqs(content)
+    send_message_to_sqs(content["data"])
     return "",200
 
 def send_message_to_sqs(content):
